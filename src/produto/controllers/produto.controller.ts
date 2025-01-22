@@ -9,10 +9,12 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProdutoService } from '../services/produto.service';
 import { Produto } from '../entities/produto.entity';
-
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
+@UseGuards(JwtAuthGuard)
 @Controller('/produtos')
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
@@ -28,12 +30,6 @@ export class ProdutoController {
   findById(@Param('id', ParseIntPipe) id: number): Promise<Produto> {
     return this.produtoService.findById(id);
   }
-
-  //   @Get('/titulo/:titulo') // << O primeiro é o caminho, o segundo é a variavel
-  //   @HttpCode(HttpStatus.OK)
-  //   findByTitulo(@Param('titulo') titulo: string): Promise<Produto[]> {
-  //     return this.produtoService.findByTitulo(titulo);
-  //   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -55,14 +51,17 @@ export class ProdutoController {
 
   @Get('/precoMaior/:preco')
   @HttpCode(HttpStatus.OK)
-  findByPrecoMaior(@Param('preco', ParseIntPipe) preco: number): Promise<Produto[]> {
+  findByPrecoMaior(
+    @Param('preco', ParseIntPipe) preco: number,
+  ): Promise<Produto[]> {
     return this.produtoService.findByPrecoMaior(preco);
   }
 
   @Get('/precoMenor/:preco')
   @HttpCode(HttpStatus.OK)
-  findByPrecoMenor(@Param('preco', ParseIntPipe) preco: number): Promise<Produto[]> {
+  findByPrecoMenor(
+    @Param('preco', ParseIntPipe) preco: number,
+  ): Promise<Produto[]> {
     return this.produtoService.findByPrecoMenor(preco);
   }
-
 }

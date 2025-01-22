@@ -45,6 +45,7 @@ export class ProdutoService {
   async findByPrecoMenor(preco: number): Promise<Produto[]> {
     return this.produtoRepository
       .createQueryBuilder('produto')
+      .innerJoinAndSelect('produto.categoria', 'categoria')
       .where('produto.preco < :preco', { preco })
       .orderBy('produto.preco', 'DESC')
       .getMany();
